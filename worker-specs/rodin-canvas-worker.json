@@ -1,0 +1,18 @@
+{
+  "id": "rodin-canvas-worker",
+  "displayName": "Rodin Canvas MCP",
+  "tag": "RODINCANVAS",
+  "script": "rodin_worker.py",
+  "scriptSubdir": "scripts",
+  "venv": "none",
+  "jobs": {
+    "rodin-canvas-text": "text",
+    "rodin-canvas-image": "image",
+    "rodin-canvas-rig": "rig",
+    "rodin-canvas-bang": "bang",
+    "rodin-canvas-login": "login",
+    "rodin-canvas-status": "status"
+  },
+  "readyTimeoutSecs": 60,
+  "stallTimeoutSecs": 900
+}

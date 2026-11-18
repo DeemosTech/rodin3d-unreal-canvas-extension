@@ -1,0 +1,26 @@
+{
+  "kind": "service",
+  "id": "rodin-canvas-text",
+  "label": "Rodin MCP Text to 3D",
+  "category": "mesh-generator",
+  "capabilities": [
+    "txt2mesh"
+  ],
+  "auth": "none",
+  "version": 1,
+  "params": [],
+  "pins": [],
+  "transport": {
+    "kind": "local-worker",
+    "worker": "rodin-canvas-text",
+    "inputs": {
+      "prompt": "{{params.prompt}}"
+    },
+    "outputs": {
+      "mesh": "glb_path"
+    }
+  },
+  "modelId": "rodin-canvas-text-model",
+  "provider": "rodin-canvas",
+  "imageSlots": []
+}

@@ -1,0 +1,55 @@
+{
+  "kind": "service",
+  "id": "rodin-canvas-rig",
+  "label": "Rodin MCP Auto-Rig",
+  "category": "rigging",
+  "capabilities": [
+    "mesh2rig"
+  ],
+  "auth": "none",
+  "version": 1,
+  "params": [
+    {
+      "type": "select",
+      "key": "boneTemplate",
+      "label": "Skeleton",
+      "default": "human",
+      "options": [
+        {
+          "value": "human",
+          "label": "Human"
+        },
+        {
+          "value": "bird",
+          "label": "Bird"
+        },
+        {
+          "value": "quadruped",
+          "label": "Quadruped"
+        },
+        {
+          "value": "dragon",
+          "label": "Dragon"
+        },
+        {
+          "value": "kaiju",
+          "label": "Kaiju"
+        }
+      ]
+    }
+  ],
+  "pins": [],
+  "transport": {
+    "kind": "local-worker",
+    "worker": "rodin-canvas-rig",
+    "inputs": {
+      "mesh": "{{inputs.mesh}}",
+      "bone_template": "{{params.boneTemplate}}"
+    },
+    "outputs": {
+      "mesh": "glb_path"
+    }
+  },
+  "modelId": "rodin-canvas-rig-model",
+  "provider": "rodin-canvas"
+}

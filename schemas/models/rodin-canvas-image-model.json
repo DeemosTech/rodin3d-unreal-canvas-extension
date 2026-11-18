@@ -1,0 +1,9 @@
+{
+  "kind": "model",
+  "id": "rodin-canvas-image-model",
+  "displayName": "Rodin MCP Image to 3D",
+  "category": "mesh-generator",
+  "capabilities": [
+    "img2mesh"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "kind": "service",
+  "id": "rodin-canvas-bang",
+  "label": "Rodin BANG",
+  "category": "worker",
+  "capabilities": [
+    "rodin-bang"
+  ],
+  "auth": "none",
+  "version": 1,
+  "params": [],
+  "pins": [],
+  "transport": {
+    "kind": "local-worker",
+    "worker": "rodin-canvas-bang",
+    "inputs": {
+      "mesh": "{{inputs.mesh}}",
+      "strength": "{{params.strength}}"
+    },
+    "outputs": {
+      "mesh": "glb_path"
+    }
+  }
+}

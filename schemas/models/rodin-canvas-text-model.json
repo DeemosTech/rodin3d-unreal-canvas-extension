@@ -1,0 +1,9 @@
+{
+  "kind": "model",
+  "id": "rodin-canvas-text-model",
+  "displayName": "Rodin MCP Text to 3D",
+  "category": "mesh-generator",
+  "capabilities": [
+    "txt2mesh"
+  ]
+}

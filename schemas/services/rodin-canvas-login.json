@@ -1,0 +1,21 @@
+{
+  "kind": "service",
+  "id": "rodin-canvas-login",
+  "label": "Rodin Sign In",
+  "category": "worker",
+  "capabilities": [
+    "rodin-login"
+  ],
+  "auth": "none",
+  "version": 1,
+  "params": [],
+  "pins": [],
+  "transport": {
+    "kind": "local-worker",
+    "worker": "rodin-canvas-login",
+    "inputs": {},
+    "outputs": {
+      "text": "text"
+    }
+  }
+}

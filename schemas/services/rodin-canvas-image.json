@@ -1,0 +1,33 @@
+{
+  "kind": "service",
+  "id": "rodin-canvas-image",
+  "label": "Rodin MCP Image to 3D",
+  "category": "mesh-generator",
+  "capabilities": [
+    "img2mesh"
+  ],
+  "auth": "none",
+  "version": 1,
+  "params": [],
+  "pins": [],
+  "transport": {
+    "kind": "local-worker",
+    "worker": "rodin-canvas-image",
+    "inputs": {
+      "image": "{{inputs.image}}"
+    },
+    "outputs": {
+      "mesh": "glb_path"
+    }
+  },
+  "modelId": "rodin-canvas-image-model",
+  "provider": "rodin-canvas",
+  "imageSlots": [
+    {
+      "key": "image",
+      "label": "Image",
+      "required": true,
+      "semantic": "source_image"
+    }
+  ]
+}
