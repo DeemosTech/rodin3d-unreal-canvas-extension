@@ -20,7 +20,7 @@ The extension holds an interprocess lock during sign-in and refresh. On macOS th
 
 ## Publisher setup
 
-Serve `publishing/unreal_canvas_plugin.json` at **https://hyper3d.ai/oauth_cimd/unreal_canvas_plugin.json** with HTTP 200, JSON content type and public HTTPS access. Its `client_id` must equal its public URL exactly. The authorization server must permit that public client to request device code, refresh tokens, and access to `https://api.hyper3d.com/api/mcp`. For staging, set `RODIN_CANVAS_CLIENT_ID` before launching Canvas. A different client ID requires its own session.
+Serve `publishing/unreal_canvas_extension.json` at **https://hyper3d.ai/oauth_cimd/unreal_canvas_extension.json** with HTTP 200, JSON content type and public HTTPS access. Its `client_id` must equal its public URL exactly. The authorization server must permit that public client to request device code, refresh tokens, and access to `https://api.hyper3d.com/api/mcp`. For staging, set `RODIN_CANVAS_CLIENT_ID` before launching Canvas. A different client ID requires its own session.
 
 ## Cards
 

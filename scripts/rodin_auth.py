@@ -58,7 +58,7 @@ def commit_tokens(state, tokens):
 
 
 def client_id():
-    return os.environ.get("RODIN_CANVAS_CLIENT_ID") or "https://hyper3d.ai/oauth_cimd/unreal_canvas_plugin.json"
+    return os.environ.get("RODIN_CANVAS_CLIENT_ID") or "https://hyper3d.ai/oauth_cimd/unreal_canvas_extension.json"
 
 
 def signed_in(state):
