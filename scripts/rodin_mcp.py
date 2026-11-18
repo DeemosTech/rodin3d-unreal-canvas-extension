@@ -31,7 +31,7 @@ class Rodin:
         self.number = 0
         response = self.rpc("initialize", {
             "protocolVersion":"2025-06-18","capabilities":{},
-            "clientInfo":{"name":"unreal_canvas_plugin","version":"0.1.0"}
+            "clientInfo":{"name":"unreal_canvas_extension","version":"0.1.0"}
         })
         self.version = response["protocolVersion"]
         self.rpc("notifications/initialized", {}, notification=True)

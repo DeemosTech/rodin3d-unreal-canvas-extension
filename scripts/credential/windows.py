@@ -20,7 +20,7 @@ def protect(data, decrypt=False):
     crypt = ctypes.windll.crypt32
     fn = crypt.CryptUnprotectData if decrypt else crypt.CryptProtectData
     if not fn(ctypes.byref(src), None, None, None, None, 1, ctypes.byref(dst)):
-        raise StoreError("Windows could not open the plugin credential store")
+        raise StoreError("Windows could not open the extension credential store")
     try:
         return ctypes.string_at(dst.data, dst.length)
     finally:

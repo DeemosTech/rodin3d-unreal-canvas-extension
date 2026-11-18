@@ -1,4 +1,4 @@
-"""Device authorization for Rodin Canvas. Per-user, per-plugin OS credential storage."""
+"""Device authorization for Rodin Canvas. Per-user, per-extension OS credential storage."""
 import argparse
 import json
 import os
