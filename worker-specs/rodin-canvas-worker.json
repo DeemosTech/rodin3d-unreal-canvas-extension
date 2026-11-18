@@ -4,7 +4,8 @@
   "tag": "RODINCANVAS",
   "script": "rodin_worker.py",
   "scriptSubdir": "scripts",
-  "venv": "none",
+  "requirements": "scripts/rodin_requirements.lock",
+  "requiresPython": ">=3.10",
   "jobs": {
     "rodin-canvas-text": "text",
     "rodin-canvas-image": "image",

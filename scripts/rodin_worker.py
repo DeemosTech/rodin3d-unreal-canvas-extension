@@ -1,4 +1,5 @@
 from __future__ import annotations
+import asyncio
 import hashlib
 import json
 from pathlib import Path
@@ -10,7 +11,7 @@ from urllib.request import Request
 from _worker_host import serve
 import credential
 import rodin_auth
-from rodin_mcp import Rodin
+from rodin_mcp import call_tool, connect
 
 
 def signed_endpoint(url):
@@ -20,9 +21,11 @@ def signed_endpoint(url):
     return url
 
 
-def upload(client, path, kind):
+async def upload(client, path, kind):
     size=path.stat().st_size
-    slot=client.tool("rodin_create_uploads",{"kind":kind,"files":[{"filename":path.name,"size_bytes":size}]})["uploads"][0]
+    files = [{"filename": path.name, "size_bytes": size}]
+    result = await call_tool(client, "rodin_create_uploads", {"kind": kind, "files": files})
+    slot = result["uploads"][0]
     if slot["method"]!="PUT":
         raise ValueError("Unexpected Rodin upload method")
     with path.open("rb") as body:
@@ -53,7 +56,16 @@ def perform(job):
     if kind=="login":
         rodin_auth.token(tick)
         return {"text":"Signed in to Rodin"}
-    client=Rodin(tick)
+    return asyncio.run(run_mesh_job(job, tick))
+
+
+async def run_mesh_job(job, tick):
+    async with connect(tick) as client:
+        return await generate(job, tick, client)
+
+
+async def generate(job, tick, client):
+    kind = job.kind
     tick("Connected to Rodin")
     if kind in ("image","text"):
         tool="rodin_generate"
@@ -61,7 +73,7 @@ def perform(job):
         if kind=="image":
             path=Path(job["image"])
             if not path.is_file():raise ValueError("Connect an image file")
-            args["reference_upload_ids"]=[upload(client,path,"image")]
+            args["reference_upload_ids"]=[await upload(client,path,"image")]
         else:
             prompt=str(job.get("prompt") or "").strip()
             if not prompt:raise ValueError("Enter a prompt")
@@ -78,22 +90,24 @@ def perform(job):
             tool="rodin_generate_rigging"
             args={"bone_template":job.get("bone_template") or "human","geometry_file_format":"glb"}
             if asset_id:args["asset_id"]=asset_id
-            else:args["model_upload_id"]=upload(client,mesh,"model")
+            else:args["model_upload_id"]=await upload(client,mesh,"model")
         else:raise ValueError("Unknown Rodin job")
     tick("Submitting one Rodin job")
-    task=client.tool(tool,args)["generation_id"]
+    submission = await call_tool(client, tool, args)
+    task = submission["generation_id"]
     tick(f"Rodin job {task} submitted")
     deadline=time.monotonic()+1200
     while time.monotonic()<deadline:
         job.raise_if_cancelled()
-        result=client.tool("rodin_wait",{"generation_id":task,"timeout_seconds":20})
+        result = await call_tool(client, "rodin_wait", {"generation_id": task, "timeout_seconds": 20})
         if result["status"]=="completed":break
         if result["status"] in ("failed","cancelled","canceled","error"):
             raise RuntimeError(f"Rodin job {task} failed")
         tick(f"Waiting for Rodin job {task}")
-        time.sleep(2)
+        await asyncio.sleep(2)
     else:raise RuntimeError(f"Timed out waiting for Rodin job {task}")
-    files=client.tool("rodin_get_result",{"generation_id":task})["files"]
+    result = await call_tool(client, "rodin_get_result", {"generation_id": task})
+    files = result["files"]
     glbs=[f for f in files if f["name"].lower().endswith(".glb")]
     if not glbs:raise ValueError("Rodin returned no GLB")
     model=next((f for f in glbs if "pbr" in f["name"].lower()),glbs[0])
