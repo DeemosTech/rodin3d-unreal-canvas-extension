@@ -10,7 +10,8 @@ from contextlib import ExitStack
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import rodin_auth as auth
-import posix_credentials as posix
+import credential
+from credential import linux, macos
 
 
 class SessionTest(unittest.TestCase):
@@ -36,20 +37,20 @@ class SessionTest(unittest.TestCase):
                         expires_in=600)
 
         with tempfile.TemporaryDirectory() as tmp, ExitStack() as ctx:
-            ctx.enter_context(patch.object(auth, "STATE", Path(tmp) / "login.dpapi"))
+            ctx.enter_context(patch.object(credential.backend, "STATE_DIR", Path(tmp)))
             ctx.enter_context(patch.object(auth, "oauth_post", side_effect=post))
             ctx.enter_context(patch.object(auth.time, "sleep"))
             if sys.platform != "win32":
-                ctx.enter_context(patch.object(auth, "credential", side_effect=keyring))
+                ctx.enter_context(patch.object(credential.backend, "credential", side_effect=keyring))
             token = auth.token(lambda s: None, False)
             self.assertEqual(auth.token(lambda s: None, False), token)
             self.assertEqual(auth.token(lambda s: None, False, rejected=token), "mock-access-2")
             self.assertEqual(auth.token(lambda s: None, False, rejected="mock-access-2"), "mock-access-3")
-            self.assertEqual(auth.load()["client_id"], auth.client_id())
+            self.assertEqual(credential.load()["client_id"], auth.client_id())
             if sys.platform == "win32":
-                self.assertNotIn(b"mock-refresh", auth.STATE.read_bytes())
-            auth.clear_session()
-            self.assertEqual(auth.load(), {})
+                self.assertNotIn(b"mock-refresh", (Path(tmp) / "login.dpapi").read_bytes())
+            credential.clear_session()
+            self.assertEqual(credential.load(), {})
 
     def test_secret_service_wire(self):
         item = {}
@@ -62,11 +63,29 @@ class SessionTest(unittest.TestCase):
             if argv[1] == "lookup" and not item:
                 return subprocess.CompletedProcess(argv, 1, "", "")
             return subprocess.CompletedProcess(argv, 0, item.get("value", ""), "")
-        with patch.object(posix.shutil, "which", return_value="/usr/bin/secret-tool"), patch.object(posix, "run_helper", side_effect=run):
-            posix.secret_service("store", {"access_token":"test-token"})
-            self.assertEqual(posix.secret_service("get")["access_token"], "test-token")
-            posix.secret_service("erase")
-            self.assertEqual(posix.secret_service("get"), {})
+        with patch.object(linux.shutil, "which", return_value="/usr/bin/secret-tool"), patch.object(linux, "run_helper", side_effect=run):
+            linux.credential("store", {"access_token":"test-token"})
+            self.assertEqual(linux.credential("get")["access_token"], "test-token")
+            linux.credential("erase")
+            self.assertEqual(linux.credential("get"), {})
+
+    def test_keychain_wire(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            helper = Path(tmp) / "git-credential-osxkeychain"
+            helper.touch()
+            def run(argv, payload=None):
+                if argv == ["/usr/bin/git", "--exec-path"]:
+                    return subprocess.CompletedProcess(argv, 0, tmp, "")
+                self.assertEqual(argv[0], str(helper))
+                self.assertIn("username=unreal_canvas_plugin", payload.splitlines())
+                if argv[1] == "store":
+                    self.assertIn('password={"access_token":"test-token"}', payload.splitlines())
+                reply = 'password={"access_token":"test-token"}' if argv[1] == "get" else ""
+                return subprocess.CompletedProcess(argv, 0, reply, "")
+            with patch.object(macos, "run_helper", side_effect=run):
+                macos.credential("store", {"access_token": "test-token"})
+                self.assertEqual(macos.credential("get"), {"access_token": "test-token"})
+                macos.credential("erase")
 
 
 if __name__ == "__main__":
