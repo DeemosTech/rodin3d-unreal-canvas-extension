@@ -52,9 +52,13 @@ def perform(job):
         with credential.locked(lambda s:job.progress(None,s)):
             state=credential.load()
         return {"text":"Session saved" if rodin_auth.signed_in(state) else "Sign-in required"}
-    tick=lambda message:job.progress(None,message)
+    def tick(message):
+        # Canvas 0.21 only forwards worker stages that include a numeric fraction.
+        job.progress(0.0, message)
+
     if kind=="login":
         rodin_auth.token(tick)
+        job.progress(1.0, "Signed in to Rodin")
         return {"text":"Signed in to Rodin"}
     return asyncio.run(run_mesh_job(job, tick))
 

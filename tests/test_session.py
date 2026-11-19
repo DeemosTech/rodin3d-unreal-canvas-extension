@@ -15,6 +15,16 @@ from credential import linux, macos
 
 
 class SessionTest(unittest.TestCase):
+    def test_verification_link(self):
+        challenge = dict(verification_uri="https://hyper3d.ai/device?lang=en#confirm", user_code="ABCD-EFGH")
+        self.assertEqual(auth.verification_link(challenge),
+                         "https://hyper3d.ai/device?lang=en&user_code=ABCD-EFGH#confirm")
+        challenge["verification_uri_complete"] = "https://hyper3d.ai/verify?interaction=example"
+        self.assertEqual(auth.verification_link(challenge), challenge["verification_uri_complete"])
+        challenge["verification_uri_complete"] = "https://example.com"
+        with self.assertRaises(auth.AuthError):
+            auth.verification_link(challenge)
+
     def test_lifecycle(self):
         saved = {}
         def keyring(action, state=None):

@@ -4,9 +4,9 @@ This extension adds Rodin mesh generation to Unreal Canvas through Hyper3D's rem
 
 ## Installation and account
 
-Publish this directory as the root of a Git repository and tag the release `v0.1.1`. In Canvas open **Settings → Extensions → Install → From a git repository**, select the repository and version, then **Allow** the extension. Canvas installs the official MCP Python SDK into a worker environment using `scripts/rodin_requirements.lock`. The first setup needs access to PyPI and Python 3.10+. The Windows UE test installation includes Python 3.11.
+Publish this directory as the root of a Git repository and tag the release `v0.1.2`. In Canvas open **Settings → Extensions → Install → From a git repository**, select the repository and version, then **Allow** the extension. Canvas installs the official MCP Python SDK into a worker environment using `scripts/rodin_requirements.lock`. The first setup needs access to PyPI and Python 3.10+. The Windows UE test installation includes Python 3.11.
 
-Run the **Rodin Sign In** card or, from this directory, `python scripts/rodin_auth.py login`. The first generation can also initiate sign-in. Open the Hyper3D verification page and approve the code. **Rodin Account Status** reports local session presence, not a remote account or quota check. `python scripts/rodin_auth.py logout` removes this extension's saved session from this PC. For global revocation use the account provider's controls.
+Run the **Rodin Sign In** card or, from this directory, `python scripts/rodin_auth.py login`. The first generation can also initiate sign-in. While approval is pending, Canvas displays the device verification code at the top of the window. Compare it with the code on the Hyper3D page before approving. **Rodin Account Status** reports local session presence, not a remote account or quota check. `python scripts/rodin_auth.py logout` removes this extension's saved session from this PC. For global revocation use the account provider's controls.
 
 Credential storage belongs to this extension on each platform:
 

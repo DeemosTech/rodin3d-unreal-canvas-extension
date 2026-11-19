@@ -1,4 +1,40 @@
-import { registerNodeKind, baseNode, pin, runWorkerJob } from "@merlin/plugin-api";
+import { registerNodeKind, baseNode, pin, runWorkerJob, loadSignal } from "@merlin/plugin-api";
+
+// Canvas 0.21 emits raw worker progress before the Mesh UI reformats the stage.
+let notice;
+let noticeExecution;
+let noticeTimer;
+
+function clearVerificationNotice() {
+  clearTimeout(noticeTimer);
+  notice?.remove();
+  notice = undefined;
+  noticeExecution = undefined;
+}
+
+function showVerificationCode({detail}) {
+  const execution = detail?.execution_id;
+  if (!execution || typeof detail.status !== "string") return;
+  const match = /^Rodin verification code: ([A-Za-z0-9-]{4,32}) \| Sign in at https:\/\//.exec(detail.status);
+  if (!match) {
+    if (noticeExecution === execution) clearVerificationNotice();
+    return;
+  }
+  if (!notice) {
+    notice = document.createElement("aside");
+    notice.setAttribute("role", "status");
+    notice.style.cssText = "position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:2147483647;background:#202428;color:#fff;padding:12px 20px;border:1px solid #608580;border-radius:8px;font:16px sans-serif;user-select:text";
+    document.body.append(notice);
+  }
+  noticeExecution = execution;
+  const message = `Rodin sign-in · ${match[1]} · Confirm this code on the Hyper3D page.`;
+  if (notice.textContent !== message) notice.textContent = message;
+  clearTimeout(noticeTimer);
+  noticeTimer = setTimeout(clearVerificationNotice, 60000);
+}
+
+window.addEventListener("services-progress", showVerificationCode, {signal: loadSignal});
+loadSignal.addEventListener("abort", clearVerificationNotice, {once: true});
 
 for (const op of ["bang", "login", "status"]) {
   const kind = "rodinCanvas." + op;

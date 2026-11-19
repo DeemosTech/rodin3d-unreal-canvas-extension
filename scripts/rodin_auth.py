@@ -5,7 +5,7 @@ import os
 import sys
 import time
 from urllib.error import HTTPError
-from urllib.parse import urlencode, urlsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit
 from urllib.request import build_opener, HTTPRedirectHandler, Request
 import webbrowser
 
@@ -65,6 +65,21 @@ def signed_in(state):
     return state.get("client_id") == client_id() and bool(state.get("refresh_token") or state.get("expires_at",0)>time.time())
 
 
+def verification_link(challenge):
+    uri = challenge["verification_uri"]
+    complete = challenge.get("verification_uri_complete")
+    for address in (uri, complete or uri):
+        site = urlsplit(address)
+        if site.scheme != "https" or site.hostname not in ("hyper3d.ai", "www.hyper3d.ai", "api.hyper3d.com"):
+            raise AuthError("Unexpected Rodin verification site")
+    if complete:
+        return complete
+    page = urlsplit(uri)
+    query = [(key, value) for key, value in parse_qsl(page.query, keep_blank_values=True) if key != "user_code"]
+    query.append(("user_code", challenge["user_code"]))
+    return page._replace(query=urlencode(query)).geturl()
+
+
 def token(tick, open_browser=True, rejected=None):
     with credential.locked(tick):
         state = credential.load()
@@ -86,12 +101,8 @@ def token(tick, open_browser=True, rejected=None):
                 credential.save(state)
         challenge = oauth_post("/device/code",dict(common,scope=SCOPE))
         uri, code = challenge["verification_uri"], challenge["user_code"]
-        link = challenge.get("verification_uri_complete") or uri
-        for address in (uri,link):
-            u = urlsplit(address)
-            if u.scheme != "https" or u.hostname not in ("hyper3d.ai","www.hyper3d.ai","api.hyper3d.com"):
-                raise AuthError("Unexpected Rodin verification site")
-        message = f"Sign in at {uri} with code {code}"
+        link = verification_link(challenge)
+        message = f"Rodin verification code: {code} | Sign in at {uri}"
         tick(message)
         if open_browser:
             webbrowser.open(link)
