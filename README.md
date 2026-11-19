@@ -4,13 +4,14 @@ Turn a reference image into a 3D mesh with your Hyper3D account, then use the GL
 
 ## Install in Unreal Canvas
 
-This preview targets Unreal Canvas 0.21.0. You'll need a Hyper3D account and a network connection. On first use, Canvas downloads the Python dependencies from PyPI into its worker environment (Python 3.10 or later).
+Rodin for Unreal Canvas targets Unreal Canvas 0.21.0. You'll need a Hyper3D account and a network connection. On first use, Canvas downloads the Python dependencies from PyPI into its worker environment (Python 3.10 or later).
 
-1. Open **Settings → Extensions**. If your team gave you a catalog folder or URL, open **Sources**, paste it, and select **Add**.
-2. Under **Available → Plugins**, find **Rodin for Unreal Canvas** and select **Install**.
-3. Under **Installed**, select **Allow** if prompted.
+1. Open **Settings → Extensions → Install → From a git repository**.
+2. Paste `https://github.com/DeemosTech/rodin3d-unreal-canvas-extension` into **Repository URL**.
+3. Leave **Tag** empty for the latest stable release, or enter a specific published version tag. Select **Install**.
+4. Under **Installed → Plugins**, find **Rodin for Unreal Canvas** and select **Allow**.
 
-If you only have the Git repository URL, ask your team for the preview catalog. Canvas requires a release tag for Git installation.
+Git installation becomes available with the first release tag. If the repository is private, your local Git must have read access. For an untagged preview, add your team's catalog under **Sources**, then install Rodin from **Available**.
 
 ## Generate your first mesh
 
