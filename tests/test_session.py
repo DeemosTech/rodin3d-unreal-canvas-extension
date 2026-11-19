@@ -52,7 +52,13 @@ class SessionTest(unittest.TestCase):
             ctx.enter_context(patch.object(auth.time, "sleep"))
             if sys.platform != "win32":
                 ctx.enter_context(patch.object(credential.backend, "credential", side_effect=keyring))
-            token = auth.token(lambda s: None, False)
+            events = []
+            with patch.object(auth.time, "sleep", side_effect=lambda seconds: events.append(seconds)), \
+                 patch.object(auth.webbrowser, "open", side_effect=lambda url: events.append(url)):
+                token = auth.token(events.append)
+            self.assertIn("Rodin verification code: TEST", events[0])
+            self.assertEqual(events[1], 3)
+            self.assertEqual(events[3], "https://hyper3d.ai/test?user_code=TEST")
             self.assertEqual(auth.token(lambda s: None, False), token)
             self.assertEqual(auth.token(lambda s: None, False, rejected=token), "mock-access-2")
             self.assertEqual(auth.token(lambda s: None, False, rejected="mock-access-2"), "mock-access-3")

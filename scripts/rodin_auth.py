@@ -103,10 +103,14 @@ def token(tick, open_browser=True, rejected=None):
         uri, code = challenge["verification_uri"], challenge["user_code"]
         link = verification_link(challenge)
         message = f"Rodin verification code: {code} | Sign in at {uri}"
+        deadline = time.monotonic() + int(challenge["expires_in"])
         tick(message)
         if open_browser:
+            time.sleep(3)
+            if time.monotonic() >= deadline:
+                raise AuthError("Device code expired. Start sign-in again.")
+            tick(message)  # Check for a cancelled Canvas job before opening the browser.
             webbrowser.open(link)
-        deadline = time.monotonic() + int(challenge["expires_in"])
         delay = max(1,int(challenge.get("interval",5)))
         while time.monotonic()+delay < deadline:
             time.sleep(delay)
