@@ -1,0 +1,9 @@
+{
+  "kind": "model",
+  "id": "rodin-canvas-rig-model",
+  "displayName": "Rodin MCP Auto-Rig",
+  "category": "rigging",
+  "capabilities": [
+    "mesh2rig"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "kind": "provider",
+  "id": "rodin-canvas",
+  "displayName": "Hyper3D Rodin MCP",
+  "group": "Hyper3D Rodin MCP",
+  "defaultAuth": "none"
+}

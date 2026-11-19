@@ -1,0 +1,26 @@
+{
+  "id": "rodin3d-unreal-canvas-extension",
+  "name": "Rodin for Unreal Canvas",
+  "version": "0.1.4",
+  "apiVersion": 1,
+  "namespaces": [
+    "rodinCanvas"
+  ],
+  "contributes": {
+    "workers": [
+      "rodin-canvas-worker"
+    ],
+    "schemas": [
+      "rodin-canvas-image",
+      "rodin-canvas-rig",
+      "rodin-canvas-bang",
+      "rodin-canvas-login",
+      "rodin-canvas-status"
+    ],
+    "nodeKinds": [
+      "rodinCanvas.bang",
+      "rodinCanvas.login",
+      "rodinCanvas.status"
+    ]
+  }
+}

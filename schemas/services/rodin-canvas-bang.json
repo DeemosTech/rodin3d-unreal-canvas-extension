@@ -1,0 +1,34 @@
+{
+  "kind": "service",
+  "id": "rodin-canvas-bang",
+  "label": "Rodin BANG",
+  "category": "worker",
+  "capabilities": [
+    "rodin-bang"
+  ],
+  "auth": "none",
+  "version": 1,
+  "params": [
+    {
+      "type": "slider",
+      "key": "strength",
+      "label": "Strength",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 5
+    }
+  ],
+  "pins": [],
+  "transport": {
+    "kind": "local-worker",
+    "worker": "rodin-canvas-bang",
+    "inputs": {
+      "mesh": "{{inputs.mesh}}",
+      "strength": "{{params.strength}}"
+    },
+    "outputs": {
+      "mesh": "glb_path"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "service",
+  "id": "rodin-canvas-status",
+  "label": "Rodin Account Status",
+  "category": "worker",
+  "capabilities": [
+    "rodin-status"
+  ],
+  "auth": "none",
+  "version": 1,
+  "params": [],
+  "pins": [],
+  "transport": {
+    "kind": "local-worker",
+    "worker": "rodin-canvas-status",
+    "inputs": {},
+    "outputs": {
+      "text": "text"
+    }
+  }
+}

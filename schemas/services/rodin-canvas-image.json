@@ -1,0 +1,72 @@
+{
+  "kind": "service",
+  "id": "rodin-canvas-image",
+  "label": "Rodin MCP Image to 3D",
+  "category": "mesh-generator",
+  "capabilities": [
+    "img2mesh"
+  ],
+  "auth": "none",
+  "version": 1,
+  "params": [
+    {
+      "type": "select",
+      "key": "tier",
+      "label": "Tier",
+      "default": "Gen-2.5-Medium",
+      "options": [
+        {
+          "value": "Gen-2.5-Medium",
+          "label": "Gen-2.5-Medium"
+        },
+        {
+          "value": "Gen-2.5-High",
+          "label": "Gen-2.5-High"
+        },
+        {
+          "value": "Gen-2.5-Extreme-Low",
+          "label": "Gen-2.5-Extreme-Low"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "key": "mesh_mode",
+      "label": "Mesh mode",
+      "default": "Raw",
+      "options": [
+        {
+          "value": "Raw",
+          "label": "Raw"
+        },
+        {
+          "value": "Quad",
+          "label": "Quad"
+        }
+      ]
+    }
+  ],
+  "pins": [],
+  "transport": {
+    "kind": "local-worker",
+    "worker": "rodin-canvas-image",
+    "inputs": {
+      "image": "{{inputs.image}}",
+      "tier": "{{params.tier}}",
+      "mesh_mode": "{{params.mesh_mode}}"
+    },
+    "outputs": {
+      "mesh": "glb_path"
+    }
+  },
+  "modelId": "rodin-canvas-image-model",
+  "provider": "rodin-canvas",
+  "imageSlots": [
+    {
+      "key": "image",
+      "label": "Image",
+      "required": true,
+      "semantic": "source_image"
+    }
+  ]
+}

@@ -221,3 +221,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Canvas loads this shipped plugin entry point directly.
+!/dist/
+/dist/*
+!/dist/index.js

@@ -1,0 +1,11 @@
+{
+  "client_id": "https://hyper3d.ai/oauth_cimd/unreal_canvas_extension.json",
+  "client_name": "Rodin for Unreal Canvas",
+  "client_uri": "https://hyper3d.ai/features/mcp",
+  "application_type": "native",
+  "grant_types": ["urn:ietf:params:oauth:grant-type:device_code", "refresh_token"],
+  "token_endpoint_auth_method": "none",
+  "redirect_uris": [],
+  "response_types": [],
+  "scope": "offline_access rodin:read rodin:generate"
+}
