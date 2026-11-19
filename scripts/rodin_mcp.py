@@ -32,7 +32,7 @@ async def connect(tick):
         transport = streamable_http_client(rodin_auth.RESOURCE, http_client=http)
         client = Client(
             transport, mode="legacy", read_timeout_seconds=90,
-            client_info=Implementation(name="unreal_canvas_extension", version="0.1.0"),
+            client_info=Implementation(name="unreal_canvas_extension", version="0.1.1"),
         )
         # Close the SDK task groups normally even when Canvas cancels the job.
         stack = AsyncExitStack()

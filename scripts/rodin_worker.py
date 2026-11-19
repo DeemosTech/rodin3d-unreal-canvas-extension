@@ -67,17 +67,13 @@ async def run_mesh_job(job, tick):
 async def generate(job, tick, client):
     kind = job.kind
     tick("Connected to Rodin")
-    if kind in ("image","text"):
+    if kind == "image":
         tool="rodin_generate"
         args={"tier":"Gen-2.5-Extreme-Low","geometry_file_format":"glb","mesh_mode":"Raw"}
-        if kind=="image":
-            path=Path(job["image"])
-            if not path.is_file():raise ValueError("Connect an image file")
-            args["reference_upload_ids"]=[await upload(client,path,"image")]
-        else:
-            prompt=str(job.get("prompt") or "").strip()
-            if not prompt:raise ValueError("Enter a prompt")
-            args["prompt"]=prompt
+        path = Path(job["image"])
+        if not path.is_file():
+            raise ValueError("Connect an image file")
+        args["reference_upload_ids"] = [await upload(client, path, "image")]
     else:
         mesh=Path(job["mesh"])
         mapping=credential.state_dir()/"assets"/fingerprint(mesh)
@@ -122,7 +118,7 @@ async def generate(job, tick, client):
         if magic!=b"glTF" or v!=2 or size!=tmp.stat().st_size:raise ValueError("Invalid Rodin GLB")
         tmp.replace(dest)
     finally:tmp.unlink(missing_ok=True)
-    if kind in ("text","image"):
+    if kind == "image":
         cache=credential.state_dir()/"assets";cache.mkdir(exist_ok=True,parents=True)
         (cache/fingerprint(dest)).write_text(task)
     return {"glb_path":str(dest.resolve()),"generation_id":task}
@@ -136,4 +132,4 @@ def handle(job):
 
 
 if __name__=="__main__":
-    serve("RODINCANVAS",{k:handle for k in ("login","status","text","image","rig","bang")})
+    serve("RODINCANVAS",{k:handle for k in ("login","status","image","rig","bang")})

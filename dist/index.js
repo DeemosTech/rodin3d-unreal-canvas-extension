@@ -29,23 +29,3 @@ for (const op of ["bang", "login", "status"]) {
     }
   });
 }
-
-
-registerNodeKind({
-  kind: "rodinCanvas.textMesh",
-  meta: {label: "Rodin Text to Mesh", color: "#287c7c", category: "Generate",
-    description: "Generate a Rodin GLB from a connected text prompt."},
-  factory: (pos = {x: 0, y: 0}) => baseNode("rodinCanvas.textMesh", "Rodin Text to Mesh", pos,
-    [pin("prompt", "text", "input"), pin("mesh", "mesh", "output")]),
-  traits: {isGeneration: true},
-  adapter: {
-    handles: ["rodinCanvas.textMesh"],
-    async run({node, inputs, signal, onProgress, canvasId, requireReviewedModels, live}) {
-      if (live) throw new Error("Run this Rodin card outside the live loop.");
-      if (!String(inputs.prompt ?? "").trim()) throw new Error("Connect a text prompt.");
-      const result = await runWorkerJob("rodin-canvas-text-card", {inputs: {prompt: inputs.prompt}},
-        {signal, onProgress, canvasId, nodeId: node.id, requireReviewedModels});
-      return {outputFilePaths: {"output.glb": result.mesh}};
-    }
-  }
-});

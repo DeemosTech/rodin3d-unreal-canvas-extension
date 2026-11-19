@@ -7,7 +7,6 @@
   "requirements": "scripts/rodin_requirements.lock",
   "requiresPython": ">=3.10",
   "jobs": {
-    "rodin-canvas-text": "text",
     "rodin-canvas-image": "image",
     "rodin-canvas-rig": "rig",
     "rodin-canvas-bang": "bang",
