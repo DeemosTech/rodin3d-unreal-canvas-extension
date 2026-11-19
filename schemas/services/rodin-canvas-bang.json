@@ -8,7 +8,17 @@
   ],
   "auth": "none",
   "version": 1,
-  "params": [],
+  "params": [
+    {
+      "type": "slider",
+      "key": "strength",
+      "label": "Strength",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 5
+    }
+  ],
   "pins": [],
   "transport": {
     "kind": "local-worker",

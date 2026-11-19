@@ -1,7 +1,7 @@
 {
   "id": "rodin3d-unreal-canvas-extension",
   "name": "Rodin for Unreal Canvas",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "apiVersion": 1,
   "namespaces": [
     "rodinCanvas"
